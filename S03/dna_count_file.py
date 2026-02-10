@@ -1,10 +1,15 @@
-#lines = ["AGTACACTGGT", "ACCAGTGTACT", "ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG"]
+from dna_count import count_bases
 
+#Option 1
+f = open("dna.txt.", "r")
+lines = f.readlines()
+f.close()
+
+#Option 2
 with open("dna.txt.", "r") as f:
     lines = f.readlines()
 
 bases = {"A": 0, "C": 0, "T": 0, "G": 0}
-
 total = 0
 
 for sequence in lines:
