@@ -1,0 +1,3 @@
+The error is located in line 11. Its type is ZeroDivisionError, and its caused when the value of "t1" is 0
+This will happen anytime parameters c and d of function f take the same value.
+That's why Results 1,3 and 4 are properly computed.
