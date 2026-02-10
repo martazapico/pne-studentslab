@@ -1,8 +1,7 @@
 #lines = ["AGTACACTGGT", "ACCAGTGTACT", "ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG"]
 
-f = open("dna.txt.", "r")
-lines = f.readlines()
-f.close()
+with open("dna.txt.", "r") as f:
+    lines = f.readlines()
 
 bases = {"A": 0, "C": 0, "T": 0, "G": 0}
 
