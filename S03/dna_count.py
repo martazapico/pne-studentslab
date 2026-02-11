@@ -24,14 +24,14 @@ print("T:", t_count)
 print("G:", g_count)
 
 
-def count-bases(sequence):
+def count_bases(sequence):
     bases = {"A": 0, "C": 0, "T": 0, "G": 0}
     for i in sequence:
         if i in bases:
             bases[i] += 1
     return bases
 
-in __name__ == "__main__":
+if __name__ == "__main__":
     sequence = input("Introduce the sequence: ")
     print("Total length", len(sequence))
 

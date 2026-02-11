@@ -15,6 +15,9 @@ total = 0
 for sequence in lines:
     sequence = sequence.strip()
     total += len(sequence)
+    result = count_bases(sequence)
+    for key in result:
+        bases[key] += result [key]
     for i in sequence:
         if i in bases:
             bases[i]+=1
