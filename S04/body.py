@@ -7,6 +7,6 @@ FILENAME = "sequences/U5.txt"
 file_contents = Path(FILENAME).read_text()
 
 a = file_contents.split("\n")
-body = a[1:]
+body = a[1::]
 
 print("\n".join(body))
