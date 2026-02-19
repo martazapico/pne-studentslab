@@ -45,3 +45,19 @@ def seq_count_base(seq, base):
         for bases, count in base.items():
             print(f'  {bases}: {count}')
         print("")
+#Exercise 5:
+def seq_count(seq, base):
+    from pathlib import Path
+    print("-----| Exercise 5 |------\n")
+    for gene in seq:
+        for b in base:
+            base[b] = 0
+        filename = f"../S04/sequences/{gene}.txt"
+        file = Path(filename).read_text()
+        a = file.split("\n")
+        body = a[1::]
+        b = "".join(body)
+        for type in b:
+            if type in base:
+                base[type] += 1
+        print(f"Gene {gene}: {base}")
