@@ -1,6 +1,4 @@
 from Seq0 import seq_count_base
-
-print(seq_count_base(0))
-print(seq_count_base(1))
-print(seq_count_base(2))
-print(seq_count_base(3))
+base = {"A": 0, "C": 0, "T": 0, "G": 0}
+seq = ["U5", "ADA", "FRAT1", "FXN"]
+print(seq_count_base(seq, base))
