@@ -22,4 +22,4 @@ def get_exons_from_file(filename):
 
 filename = "sequences/ADA_EXONS.txt"
 exon = get_exons_from_file(filename)
-print(exon)
+
