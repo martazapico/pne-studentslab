@@ -48,7 +48,7 @@ def seq_count_base(seq, base):
 #Exercise 5:
 def seq_count(seq, base):
     from pathlib import Path
-    print("-----| Exercise 5 |------\n")
+    print("-----| Exercise 5 |------")
     for gene in seq:
         for b in base:
             base[b] = 0
@@ -61,3 +61,18 @@ def seq_count(seq, base):
             if type in base:
                 base[type] += 1
         print(f"Gene {gene}: {base}")
+#Exercise 6:
+def seq_reverse(seq, n):
+    from pathlib import Path
+    filename = f"../S04/sequences/{seq}.txt"
+    file = Path(filename).read_text()
+    a = file.split("\n")
+    body = a[1::]
+    first_part = "".join(body)
+    fragment = first_part[0:n]
+    print("-----| Exercise 6 |------")
+    print(f"Gene {seq}")
+    print("Fragment:", fragment)
+    reverse = fragment[::-1]
+    print("Reverse:", reverse)
+
