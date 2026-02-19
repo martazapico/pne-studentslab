@@ -4,14 +4,15 @@ def seq_ping():
 #Exercise 2:
 def seq_read_fasta(filename):
     from pathlib import Path
-    file = Path(filename).read_text()
+    f = f"../S04/sequences/{filename}"
+    file = Path(f).read_text()
     a = file.split("\n")
     body = a[1::]
     first_part = "".join(body)
     second_part = first_part[0:20]
     print(f"DNA file: {filename}")
     print("The first 20 bases are:")
-    return second_part
+    return print(second_part)
 
 #Exercise 3:
 def seq_len(seq):
@@ -85,7 +86,7 @@ def seq_complement(seq):
     first_part = "".join(body)
     fragment = first_part[0:20]
     print("-----| Exercise 7 |------")
-    print(f"Gene {seq}")
+    print(f"Gene {seq}:")
     print("Frag:", fragment)
     bases = {"A": "T", "C": "G", "T": "A", "G": "C"}
     complement = ""
