@@ -75,4 +75,23 @@ def seq_reverse(seq, n):
     print("Fragment:", fragment)
     reverse = fragment[::-1]
     print("Reverse:", reverse)
+#Exercise 7:
+def seq_complement(seq):
+    from pathlib import Path
+    filename = f"../S04/sequences/{seq}.txt"
+    file = Path(filename).read_text()
+    a = file.split("\n")
+    body = a[1::]
+    first_part = "".join(body)
+    fragment = first_part[0:20]
+    print("-----| Exercise 7 |------")
+    print(f"Gene {seq}")
+    print("Frag:", fragment)
+    bases = {"A": "T", "C": "G", "T": "A", "G": "C"}
+    complement = ""
+    for base in fragment:
+        if base in bases:
+            complement += bases[base]
+    print("Comp:", complement)
+
 
