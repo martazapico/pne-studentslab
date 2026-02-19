@@ -93,5 +93,24 @@ def seq_complement(seq):
         if base in bases:
             complement += bases[base]
     print("Comp:", complement)
-
-
+#Exercise 8
+def gene_processing(seq, base):
+    from pathlib import Path
+    print("-----| Exercise 8 |------")
+    for gene in seq:
+        for b in base:
+            base[b] = 0
+        filename = f"../S04/sequences/{gene}.txt"
+        file = Path(filename).read_text()
+        a = file.split("\n")
+        body = a[1::]
+        b = "".join(body)
+        for type in b:
+            if type in base:
+                base[type] += 1
+        base_dict = dict(base)
+        max_value = max(base_dict.values())
+        for name, value in base_dict.items():
+            if value == max_value:
+                most_frequent = name
+        print(f"Gene {gene} : Most frequent Base:{most_frequent}")
