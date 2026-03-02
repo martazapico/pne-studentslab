@@ -28,7 +28,7 @@ def seq_len(seq):
             count += 1
         print(f"Gene {gene} -> Length: {count}")
 #Exercise 4:
-def seq_count_base(seq, base):
+def seq_count_base(seq, base = None):
     from pathlib import Path
     print("-----| Exercise 4 |------\n")
     for gene in seq:
@@ -115,3 +115,18 @@ def gene_processing(seq, base):
             if value == max_value:
                 most_frequent = name
         print(f"Gene {gene} : Most frequent Base:{most_frequent}")
+
+#test 01:
+
+def seq_reverse2(seq = None):
+    return seq[::-1]
+
+def seq_len2(seq = None):
+    return len(seq)
+
+def seq_count_base2(seq, base = None):
+    return seq.count(base)
+
+def seq_complement2(seq = None):
+    bases = {"A": "T", "T": "A", "C": "G", "G": "C"}
+    return "".join(bases[b] for b in seq)
