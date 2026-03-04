@@ -43,6 +43,9 @@ class Seq:
                     return name
 
 
+
+
+
 print("-----| Practice 1, Exercise 10 |------")
 
 FILENAME1 = "../S04/sequences/U5.txt"
