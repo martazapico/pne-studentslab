@@ -8,7 +8,7 @@ ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # Configure the Server's IP and PORT
-PORT = 8080
+PORT = 8082
 IP = "212.128.255.105"
 
 # -- Step 1: create the socket
@@ -24,13 +24,15 @@ ls.bind((IP, PORT))
 ls.listen()
 
 print("The server is configured!")
-
+count = 0
 while True:
+    count += 1
     # -- Waits for a client to connect
     print("Waiting for Clients to connect")
     (cs, client_ip_port) = ls.accept()
 
-    print("A client has connected to the server!")
+
+    print(f"CONNECTION {count}. Client IP,PORT: {client_ip_port}")
 
     # -- Read the message from the client
     # -- The received message is in raw bytes
@@ -49,6 +51,6 @@ while True:
     # -- The message has to be encoded into bytes
     cs.send(response.encode())
 
+
     # -- Close the data socket
     cs.close()
-
