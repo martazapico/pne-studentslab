@@ -37,10 +37,11 @@ while True:
 
     if count <= 5:
         client_list.append(client_ip_port)
-
+    count2 = 0
     if count == 5:
         for IP, PORT in client_list:
-            print(f"Client :{IP}, {PORT}")
+            count2 += 1
+            print(f"Client {count2} :{IP}, {PORT}")
 
     # -- Read the message from the client
     # -- The received message is in raw bytes
