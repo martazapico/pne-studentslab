@@ -1,5 +1,6 @@
 import termcolor
 import socket
+from P01.Seq1_new_version import Seq
 
 
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -62,6 +63,37 @@ while True:
 
         # -- The message has to be encoded into bytes
         cs.send(response.encode())
+
+        # Exercise 3: INFO
+    if "INFO" in msg.strip():
+        termcolor.cprint("INFO", 'green')
+        first = msg.split()
+        sequence = str(first[-1])
+        s = Seq(sequence)
+        length = s.len()
+        response = ""
+        a = f"Sequence: {sequence}\n"
+        response += a
+
+        b = f"Total length: {length}\n"
+        response += b
+
+
+        list_bases = s.count()
+        for base, numb in list_bases.items():
+            percentage = (numb/length)* 100
+            percentage = round(percentage, 1)
+            c =f"{base}: {numb} ({percentage}%)\n"
+            response += c
+        cs.send(response.encode())
+        # -- Print the received message
+
+        # -- Send a response message to the client
+
+        print(response)
+
+
+
 
     # -- Close the data socket
     cs.close()
