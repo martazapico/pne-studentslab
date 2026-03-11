@@ -3,7 +3,7 @@ import termcolor
 from P02.Client0 import Client
 
 PORT = 8083
-IP = "212.128.255.105"
+IP = "212.128.255.92"
 
 
 c = Client(IP, PORT)

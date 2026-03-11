@@ -9,7 +9,7 @@ ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # Configure the Server's IP and PORT
 PORT = 8083
-IP = "212.128.255.105"
+IP = "212.128.255.92"
 
 
 # -- Step 1: create the socket
@@ -56,7 +56,7 @@ while True:
     print(f"Message received: {termcolor.colored(msg, 'green')}")
 
     # -- Send a response message to the client
-    response = f"ECHO: {msg}\n"
+    response = f"ECHO: {termcolor.colored(msg, 'green')}\n"
 
     # -- The message has to be encoded into bytes
     cs.send(response.encode())
