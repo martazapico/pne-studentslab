@@ -20,7 +20,7 @@ count = 0
 while True:
     count += 1
     # -- Waits for a client to connect
-    print("Waiting for clients")
+    print("Waiting for clients....")
     (cs, client_ip_port) = ls.accept()
 
     # -- Read the message from the client
@@ -31,6 +31,8 @@ while True:
     # -- into a human-redeable string
     msg = msg_raw.decode()
 
+
+    #Exercise 1: PING
     if msg.strip() == "PING":
     # -- Print the received message
         termcolor.cprint("PING command!", 'green')
@@ -42,6 +44,24 @@ while True:
     # -- The message has to be encoded into bytes
         cs.send(response.encode())
 
+    # Exercise 2: GET
+    if "GET" in msg.strip():
+        number = [0, 1, 2, 3, 4]
+        sequence = ["ACCTCCTCTCCAGCAATGCCAACCCCAGTCCAGGCCCCCATCCGCCCAGGATCTCGATCA", "CAAGGTCCCCTTCTTCCTTTCCATTCCCGTCAGCTTCATTTCCCTAATCTCCGTACAAAT", "GGGTGTGTGTTAGTGTGCGTGCTTGCTTGTGTGTGGAAGAAACCAACAGGGTTCACGCTG", "CGGCTCCCGCGGCTGCAGGCGCGCGGCTAGAGTGCCTGGCGGGCTCCGGCTTCCGCGTCC", "ATCCCGCAGCCGCTGTCGGGTCCGTGCCGGCGAGGATGGCTCCGGGGCGCCGCCGCCTCC"]
+        # -- Print the received message
+        termcolor.cprint("GET", 'green')
+        for i in number:
+            i = str(i)
+            if i in msg:
+                i = int(i)
+                response = f"{sequence[i]}\n"
+
+        # -- Send a response message to the client
+
+        print(response)
+
+        # -- The message has to be encoded into bytes
+        cs.send(response.encode())
 
     # -- Close the data socket
     cs.close()
