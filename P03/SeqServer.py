@@ -54,11 +54,11 @@ while True:
             i = str(i)
             if i in msg:
                 i = int(i)
-                response = f"{sequence[i]}\n"
+                response = f"{sequence[i]}"
 
         # -- Send a response message to the client
 
-        print(response)
+        print(f"{response}\n")
 
         # -- The message has to be encoded into bytes
         cs.send(response.encode())
