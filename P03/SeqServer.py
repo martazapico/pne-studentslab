@@ -3,8 +3,7 @@ import socket
 from P01.Seq1_new_version import Seq
 
 
-ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
 
 PORT = 8080
 IP = "127.0.0.1"
@@ -46,7 +45,7 @@ while True:
         cs.send(response.encode())
 
     # Exercise 2: GET
-    if "GET" in msg.strip():
+    elif "GET" in msg.strip():
         number = [0, 1, 2, 3, 4]
         sequence = ["ACCTCCTCTCCAGCAATGCCAACCCCAGTCCAGGCCCCCATCCGCCCAGGATCTCGATCA", "CAAGGTCCCCTTCTTCCTTTCCATTCCCGTCAGCTTCATTTCCCTAATCTCCGTACAAAT", "GGGTGTGTGTTAGTGTGCGTGCTTGCTTGTGTGTGGAAGAAACCAACAGGGTTCACGCTG", "CGGCTCCCGCGGCTGCAGGCGCGCGGCTAGAGTGCCTGGCGGGCTCCGGCTTCCGCGTCC", "ATCCCGCAGCCGCTGTCGGGTCCGTGCCGGCGAGGATGGCTCCGGGGCGCCGCCGCCTCC"]
         # -- Print the received message
@@ -65,7 +64,7 @@ while True:
         cs.send(response.encode())
 
         # Exercise 3: INFO
-    if "INFO" in msg.strip():
+    elif "INFO" in msg.strip():
         termcolor.cprint("INFO", 'green')
         first = msg.split()
         sequence = str(first[-1])
@@ -86,11 +85,24 @@ while True:
             c =f"{base}: {numb} ({percentage}%)\n"
             response += c
         cs.send(response.encode())
+
+        print(response)
+
+     # Exercise 4: COMP
+    elif "COMP" in msg.strip():
+        termcolor.cprint("COMP", 'green')
+        first = msg.split()
+        sequence = str(first[-1])
+        s = Seq(sequence)
+
+        response2 = s.complement()
+
+        cs.send(response2.encode())
         # -- Print the received message
 
         # -- Send a response message to the client
 
-        print(response)
+        print(f"{response2}\n")
 
 
 
