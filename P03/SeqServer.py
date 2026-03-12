@@ -105,6 +105,23 @@ while True:
         print(f"{response2}\n")
 
 
+     # Exercise 4: COMP
+    elif "REV" in msg.strip():
+        termcolor.cprint("REV", 'green')
+        first = msg.split()
+        sequence = str(first[-1])
+        s = Seq(sequence)
+
+        response2 = s.reverse()
+
+        cs.send(response2.encode())
+        # -- Print the received message
+
+        # -- Send a response message to the client
+
+        print(f"{response2}\n")
+
+
 
 
     # -- Close the data socket

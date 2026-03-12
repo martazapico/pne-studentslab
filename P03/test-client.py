@@ -38,3 +38,11 @@ termcolor.cprint(f"To server: {message4} ", 'blue')
 response = c.talk(message4)
 print(f"{response}")
 
+#test 5
+print("Test 5:")
+
+message5 = "REV AACCGTA"
+termcolor.cprint(f"To server: {message5} ", 'blue')
+response = c.talk(message5)
+print(f"{response}")
+
