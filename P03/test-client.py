@@ -46,3 +46,11 @@ termcolor.cprint(f"To server: {message5} ", 'blue')
 response = c.talk(message5)
 print(f"{response}")
 
+#test 6
+print("Test 6:")
+
+message6 = "GENE U5"
+termcolor.cprint(f"To server: {message6} ", 'blue')
+response = c.talk(message6)
+print(f"{response}")
+

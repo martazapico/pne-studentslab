@@ -105,7 +105,7 @@ while True:
         print(f"{response2}\n")
 
 
-     # Exercise 4: COMP
+     # Exercise 5: REV
     elif "REV" in msg.strip():
         termcolor.cprint("REV", 'green')
         first = msg.split()
@@ -121,6 +121,24 @@ while True:
 
         print(f"{response2}\n")
 
+    # Exercise 6: GENE
+    elif "GENE" in msg.strip():
+        termcolor.cprint("GENE", 'green')
+        first = msg.split()
+        name = str(first[-1])
+
+        filename = f"../S04/sequences/{name}.txt"
+        s = Seq()
+
+
+        response = s.read_fasta(filename)
+
+        cs.send(response.encode())
+        # -- Print the received message
+
+        # -- Send a response message to the client
+
+        print(f"{response}\n")
 
 
 
