@@ -1,0 +1,23 @@
+First URL:
+
+    The first request line of the web-server2 is: "GET /hello HTTP/1.1"
+    The first resource that the client is asking for is: "/hello"
+
+    The second request line of the web-server2 is: "GET /favicon.ico HTTP/1.1"
+    The second resource that the client is asking for is: "/favicon.ico"
+
+Second URL:
+
+    The first request line of the web-server2 is: "GET /file.html HTTP/1.1"
+    The first resource that the client is asking for is: "/file.html"
+
+    The second request line of the web-server2 is: "GET /favicon.ico HTTP/1.1"
+    The second resource that the client is asking for is: "/favicon.ico"
+
+Third URL:
+
+    The first request line of the web-server2 is: "GET /hi/there?name=virus&type=corona HTTP/1.1"
+    The first resource that the client is asking for is: "hi/there?name=virus&type=corona"
+
+    The second request line of the web-server2 is: "GET /favicon.ico HTTP/1.1"
+    The second resource that the client is asking for is: "/favicon.ico"
