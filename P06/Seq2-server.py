@@ -69,9 +69,45 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             text = Path(f'../S04/sequences/{gene}.txt').read_text()
             a = text.split("\n")
             body = a[1::]
-            gene_text = "\n".join(body)
+            gene_text = "<br>".join(body)
             contents =  Path('html/gene.html').read_text()
             contents = contents.format(gene=gene, gene_text=gene_text)
+            self.send_response(200)
+        elif path == '/operation':
+            sequence = arguments.get('sequence')
+            sequence = str(sequence[0])
+            sequence = sequence.upper()
+            operation = arguments.get('base')
+            operation = str(operation[0])
+
+            list_bases = {'A' : 0, 'T' : 0, 'G' : 0, 'C' : 0}
+            length = len(sequence)
+            for letter in sequence:
+                if letter in list_bases:
+                    list_bases[letter] += 1
+            bases = ""
+            for base, numb in list_bases.items():
+                if length > 0:
+                    percentage = (numb / length) * 100
+                    percentage = round(percentage, 1)
+                else:
+                    percentage = 0
+                bases += f"{base}: {numb} ({percentage}%)<br>"
+            if operation == 'Info':
+                result = f"Sequence: {sequence}<br> Total length: {length}<br> {bases}"
+            elif operation == 'Comp':
+                comp_bases = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'}
+                result = ""
+                for i in sequence:
+                    if i in comp_bases:
+                        result += comp_bases[i]
+                    else:
+                        result += i
+            elif operation == 'Rev':
+                result = sequence[::-1]
+
+            contents =  Path('html/operation.html').read_text()
+            contents = contents.format(sequence=sequence, operation=operation, result=result)
             self.send_response(200)
         else:
             contents = Path('html/error.html').read_text()
