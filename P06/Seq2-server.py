@@ -53,6 +53,15 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         </html>
         """
             self.send_response(200)
+
+        elif path == '/get':
+            sequence = ["ACCTCCTCTCCAGCAATGCCAACCCCAGTCCAGGCCCCCATCCGCCCAGGATCTCGATCA", "CAAGGTCCCCTTCTTCCTTTCCATTCCCGTCAGCTTCATTTCCCTAATCTCCGTACAAAT", "GGGTGTGTGTTAGTGTGCGTGCTTGCTTGTGTGTGGAAGAAACCAACAGGGTTCACGCTG", "CGGCTCCCGCGGCTGCAGGCGCGCGGCTAGAGTGCCTGGCGGGCTCCGGCTTCCGCGTCC", "ATCCCGCAGCCGCTGTCGGGTCCGTGCCGGCGAGGATGGCTCCGGGGCGCCGCCGCCTCC"]
+            number = arguments.get('n')
+            number = int(number[0])
+            seq = sequence[number]
+            contents =  Path('html/get.html').read_text()
+            contents = contents.format(number=number, seq=seq)
+            self.send_response(200)
         else:
             contents = Path('html/error.html').read_text()
             self.send_response(200)  # -- Status line: OK!
