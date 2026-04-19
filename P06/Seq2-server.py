@@ -62,6 +62,17 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents =  Path('html/get.html').read_text()
             contents = contents.format(number=number, seq=seq)
             self.send_response(200)
+
+        elif path == '/gene':
+            gene = arguments.get('name')
+            gene = str(gene[0])
+            text = Path(f'../S04/sequences/{gene}.txt').read_text()
+            a = text.split("\n")
+            body = a[1::]
+            gene_text = "\n".join(body)
+            contents =  Path('html/gene.html').read_text()
+            contents = contents.format(gene=gene, gene_text=gene_text)
+            self.send_response(200)
         else:
             contents = Path('html/error.html').read_text()
             self.send_response(200)  # -- Status line: OK!
