@@ -41,9 +41,9 @@ data1 = r1.read().decode("utf-8")
 # -- form the JSON received
 response = json.loads(data1)
 
-termcolor.cprint(f"Gene", 'green', end=" ")
+termcolor.cprint(f"Gene:", 'green', end=" ")
 print(gene)
-termcolor.cprint(f"Description", 'green', end=" ")
+termcolor.cprint(f"Description:", 'green', end=" ")
 print(response["desc"])
-termcolor.cprint(f"Bases", 'green', end=" ")
+termcolor.cprint(f"Bases:", 'green', end=" ")
 print(response["seq"])
