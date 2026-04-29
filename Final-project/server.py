@@ -97,9 +97,52 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 for i in karyotype:
                     chrom += f"<br> {i}"
 
-
                 contents = Path('html/karyotype.html').read_text()
                 contents = contents.format(chrom=chrom)
+                self.send_response(200)
+
+        elif path == '/chromosomeLength':
+            species = arguments.get('species')[0]
+            chromo = arguments.get('chromo')[0]
+            try:
+                species = str(species)
+            except:
+                species = None
+            try:
+                chromo = str(chromo)
+            except:
+                chromo = None
+            SERVER = 'rest.ensembl.org'
+            ENDPOINT = f'/info/assembly/{species}'
+            PARAMS = '?content-type=application/json'
+            REQUEST = ENDPOINT + PARAMS
+            conn = http.client.HTTPConnection(SERVER)
+            try:
+                conn.request("GET", REQUEST)
+            except ConnectionRefusedError:
+                print("ERROR! Cannot connect to the Server")
+                exit()
+
+            r1 = conn.getresponse()
+            print(f"Response received!: {r1.status} {r1.reason}\n")
+
+            data1 = r1.read().decode("utf-8")
+            response = json.loads(data1)
+            karyotype = response['karyotype']
+
+            if species ==None or chromo == None:
+                contents = Path('html/error.html').read_text()
+                self.send_response(200)
+            else:
+
+                chrom_list = response['top_level_region']
+                for i in chrom_list:
+                    name = i['name']
+                    if name == chromo:
+                        length = i['length']
+
+                contents = Path('html/chromosomeLength.html').read_text()
+                contents = contents.format(length=length)
                 self.send_response(200)
 
         else:
