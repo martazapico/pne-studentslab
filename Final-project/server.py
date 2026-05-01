@@ -358,6 +358,51 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     contents = contents.format(base_calc=base_calc, length=length, gene=gene)
                     self.send_response(200)
 
+            elif path == 'geneList':
+                try:
+                    chromo = arguments.get('chromo')[0]
+                    chromo = str(chromo)
+                    start = arguments.get('start')[0]
+                    gene = int(start)
+                    end = arguments.get('end')[0]
+                    end = int(end)
+
+                except:
+                    start = None
+                    chromo = None
+                    end = None
+
+                SERVER = 'rest.ensembl.org'
+                ENDPOINT = f'/overlap/region/human/{chromo}:{start}-{end}'
+                PARAMS = '?content-type=application/json'
+                EXTRA = ';feature=gene;feature=transcript;feature=cds;feature=exon'
+                REQUEST = ENDPOINT + PARAMS + EXTRA
+                conn = http.client.HTTPConnection(SERVER)
+                try:
+                    conn.request("GET", REQUEST)
+                except ConnectionRefusedError:
+                    print("ERROR! Cannot connect to the Server")
+                    exit()
+
+                r1 = conn.getresponse()
+                print(f"Response received!: {r1.status} {r1.reason}\n")
+
+                data1 = r1.read().decode("utf-8")
+                response = json.loads(data1)
+                ids = ""
+                for i in response:
+                    id = i['id']
+                    ids += f"{id}<br>"
+                if chromo == None or start == None or end == None:
+                    contents = Path('html/error.html').read_text()
+                    self.send_response(200)
+                else:
+
+
+                    contents = Path('html/geneCalc.html').read_text()
+                    contents = contents.format(base_calc=base_calc, length=length, gene=gene)
+                    self.send_response(200)
+
             else:
                 contents = Path('html/error.html').read_text()
                 self.send_response(200)
