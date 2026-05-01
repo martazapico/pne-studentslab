@@ -272,6 +272,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     response = json.loads(data1)
                     start = response["start"]
                     end = response["end"]
+                    chrom_name = response["seq_region_name"]
 
                     SERVER = 'rest.ensembl.org'
                     ENDPOINT = f'/sequence/id/{id}'
@@ -294,7 +295,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     length = s.len()
 
                     contents = Path('html/geneInfo.html').read_text()
-                    contents = contents.format(gene=gene, start=start, end=end, length=length)
+                    contents = contents.format(gene=gene, start=start, end=end, length=length, id=id, chrom_name=chrom_name)
                     self.send_response(200)
 
             else:
