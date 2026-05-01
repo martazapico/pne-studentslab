@@ -298,6 +298,66 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     contents = contents.format(gene=gene, start=start, end=end, length=length, id=id, chrom_name=chrom_name)
                     self.send_response(200)
 
+            elif path == '/geneCalc':
+                try:
+                    gene = arguments.get('gene')[0]
+                    gene = str(gene)
+                except:
+                    gene = None
+
+                SERVER = 'rest.ensembl.org'
+                ENDPOINT = f'/xrefs/symbol/human/{gene}'
+                PARAMS = '?content-type=application/json'
+                REQUEST = ENDPOINT + PARAMS
+                conn = http.client.HTTPConnection(SERVER)
+                try:
+                    conn.request("GET", REQUEST)
+                except ConnectionRefusedError:
+                    print("ERROR! Cannot connect to the Server")
+                    exit()
+
+                r1 = conn.getresponse()
+                print(f"Response received!: {r1.status} {r1.reason}\n")
+
+                data1 = r1.read().decode("utf-8")
+                response = json.loads(data1)
+                id = response[0]['id']
+                if gene == None:
+                    contents = Path('html/error.html').read_text()
+                    self.send_response(200)
+                else:
+                    SERVER = 'rest.ensembl.org'
+                    ENDPOINT = f'/sequence/id/{id}'
+                    PARAMS = '?content-type=application/json'
+                    REQUEST = ENDPOINT + PARAMS
+                    conn = http.client.HTTPConnection(SERVER)
+                    try:
+                        conn.request("GET", REQUEST)
+                    except ConnectionRefusedError:
+                        print("ERROR! Cannot connect to the Server")
+                        exit()
+
+                    r1 = conn.getresponse()
+                    print(f"Response received!: {r1.status} {r1.reason}\n")
+
+                    data1 = r1.read().decode("utf-8")
+                    response = json.loads(data1)
+                    bases = response["seq"]
+                    s = Seq(bases)
+                    length = s.len()
+                    b_count = s.count()
+
+                    c = ""
+                    for base, numb in b_count.items():
+                        percentage = (numb / length) * 100
+                        percentage = round(percentage, 1)
+                        c += f"{base}: {numb} ({percentage}%)<br>"
+                    base_calc = c
+
+                    contents = Path('html/geneCalc.html').read_text()
+                    contents = contents.format(base_calc=base_calc, length=length, gene=gene)
+                    self.send_response(200)
+
             else:
                 contents = Path('html/error.html').read_text()
                 self.send_response(200)
