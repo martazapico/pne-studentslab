@@ -4,6 +4,7 @@ import termcolor
 from pathlib import Path
 from pygments.lexers import resource
 import json
+from P01.Seq1_new_version import Seq
 
 PORT = 8080
 socketserver.TCPServer.allow_reuse_address = True
@@ -224,6 +225,76 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     sequence = response["seq"]
                     contents = Path('html/geneSeq.html').read_text()
                     contents = contents.format(gene=gene, sequence=sequence)
+                    self.send_response(200)
+            elif path == '/geneInfo':
+                try:
+                    gene = arguments.get('gene')[0]
+                    gene = str(gene)
+                except:
+                    gene = None
+
+                SERVER = 'rest.ensembl.org'
+                ENDPOINT = f'/xrefs/symbol/human/{gene}'
+                PARAMS = '?content-type=application/json'
+                REQUEST = ENDPOINT + PARAMS
+                conn = http.client.HTTPConnection(SERVER)
+                try:
+                    conn.request("GET", REQUEST)
+                except ConnectionRefusedError:
+                    print("ERROR! Cannot connect to the Server")
+                    exit()
+
+                r1 = conn.getresponse()
+                print(f"Response received!: {r1.status} {r1.reason}\n")
+
+                data1 = r1.read().decode("utf-8")
+                response = json.loads(data1)
+                id = response[0]['id']
+                if gene == None:
+                    contents = Path('html/error.html').read_text()
+                    self.send_response(200)
+                else:
+                    SERVER = 'rest.ensembl.org'
+                    ENDPOINT = f'/lookup/id/{id}'
+                    PARAMS = '?content-type=application/json'
+                    REQUEST = ENDPOINT + PARAMS
+                    conn = http.client.HTTPConnection(SERVER)
+                    try:
+                        conn.request("GET", REQUEST)
+                    except ConnectionRefusedError:
+                        print("ERROR! Cannot connect to the Server")
+                        exit()
+
+                    r1 = conn.getresponse()
+                    print(f"Response received!: {r1.status} {r1.reason}\n")
+
+                    data1 = r1.read().decode("utf-8")
+                    response = json.loads(data1)
+                    start = response["start"]
+                    end = response["end"]
+
+                    SERVER = 'rest.ensembl.org'
+                    ENDPOINT = f'/sequence/id/{id}'
+                    PARAMS = '?content-type=application/json'
+                    REQUEST = ENDPOINT + PARAMS
+                    conn = http.client.HTTPConnection(SERVER)
+                    try:
+                        conn.request("GET", REQUEST)
+                    except ConnectionRefusedError:
+                        print("ERROR! Cannot connect to the Server")
+                        exit()
+
+                    r1 = conn.getresponse()
+                    print(f"Response received!: {r1.status} {r1.reason}\n")
+
+                    data1 = r1.read().decode("utf-8")
+                    response = json.loads(data1)
+                    bases = response["seq"]
+                    s = Seq(bases)
+                    length = s.len()
+
+                    contents = Path('html/geneInfo.html').read_text()
+                    contents = contents.format(gene=gene, start=start, end=end, length=length)
                     self.send_response(200)
 
             else:
