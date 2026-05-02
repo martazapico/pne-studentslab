@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from pygments.lexers import resource
 from P01.Seq1_new_version import Seq
-from json_functions import list_species_json, karyotype_json, chromosome_length_json, gene_lookup_json, gene_seq_json
+from json_functions import list_species_json, karyotype_json, chromosome_length_json, gene_lookup_json, gene_seq_json, gene_info_json, gene_calc_json, gene_list_json
 
 
 PORT = 8080
@@ -340,10 +340,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     s = Seq(bases)
                     length = s.len()
 
-                    contents = Path('html/geneInfo.html').read_text()
-                    contents = contents.format(gene=gene, start=start, end=end, length=length, id=id, chrom_name=chrom_name)
-                    content_type = 'text/html'
-                    self.send_response(200)
+                    if json_request != None and json_request[0] == "1":
+                        contents = gene_info_json(gene, start, end, length, id, chrom_name)
+                        content_type = 'application/json'
+                        error_code = 200
+                        self.send_response(error_code)
+                    else:
+                        contents = Path('html/geneInfo.html').read_text()
+                        contents = contents.format(gene=gene, start=start, end=end, length=length, id=id, chrom_name=chrom_name)
+                        content_type = 'text/html'
+                        self.send_response(200)
 
             elif path == '/geneCalc':
                 try:
@@ -396,16 +402,26 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     b_count = s.count()
 
                     c = ""
+                    d = ""
                     for base, numb in b_count.items():
                         percentage = (numb / length) * 100
                         percentage = round(percentage, 1)
                         c += f"{base}: {numb} ({percentage}%)<br>"
+                        d += f"\t{base}: {numb} ({percentage}%)\n"
                     base_calc = c
+                    bases = d
 
-                    contents = Path('html/geneCalc.html').read_text()
-                    contents = contents.format(base_calc=base_calc, length=length, gene=gene)
-                    content_type = 'text/html'
-                    self.send_response(200)
+                    if json_request != None and json_request[0] == "1":
+                        contents = gene_calc_json(gene, bases, length)
+                        content_type = 'application/json'
+                        error_code = 200
+                        self.send_response(error_code)
+
+                    else:
+                        contents = Path('html/geneCalc.html').read_text()
+                        contents = contents.format(base_calc=base_calc, length=length, gene=gene)
+                        content_type = 'text/html'
+                        self.send_response(200)
 
             elif path == '/geneList':
                 try:
@@ -439,18 +455,27 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 data1 = r1.read().decode("utf-8")
                 response = json.loads(data1)
                 names = ""
+                name_list = ""
                 for i in response:
                     name = i['external_name']
                     names += f"<li>{name}</li>"
+                    name_list += f"\t{name}\n"
+
                 if chromo == None or start == None or end == None:
                     contents = Path('html/error.html').read_text()
                     content_type = 'text/html'
                     self.send_response(200)
                 else:
-                    contents = Path('html/geneList.html').read_text()
-                    contents = contents.format(chromo=chromo, start=start, end=end, names=names)
-                    content_type = 'text/html'
-                    self.send_response(200)
+                    if json_request != None and json_request[0] == "1":
+                        contents = gene_list_json(chromo, start, end, name_list)
+                        content_type = 'application/json'
+                        error_code = 200
+                        self.send_response(error_code)
+                    else:
+                        contents = Path('html/geneList.html').read_text()
+                        contents = contents.format(chromo=chromo, start=start, end=end, names=names)
+                        content_type = 'text/html'
+                        self.send_response(200)
             else:
                 contents = Path('html/error.html').read_text()
                 self.send_response(200)

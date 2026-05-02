@@ -27,3 +27,15 @@ def gene_seq_json(gene, sequence):
 def gene_lookup_json(gene, id):
     data = {"gene": gene, "id": id}
     return json.dumps(data)
+
+def gene_info_json(gene, start, end, length, id, chrom_name):
+    data = {"gene": gene, "start": start, "end": end, "length": length}
+    return json.dumps(data)
+
+def gene_calc_json(gene, bases, length):
+    data = {"gene": gene, "length": length, "base calculations": bases}
+    return json.dumps(data)
+
+def gene_list_json(chromo, start, end, name_list):
+    data = {"chromosome": chromo, "start": start, "end": end, "names": name_list}
+    return json.dumps(data)
