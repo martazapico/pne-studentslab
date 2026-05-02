@@ -1,10 +1,13 @@
 import http.server
+import http.client
 import socketserver
 import termcolor
+import json
 from pathlib import Path
 from pygments.lexers import resource
-import json
 from P01.Seq1_new_version import Seq
+from json_functions import list_species_json, karyotype_json, chromosome_length_json, gene_lookup_json, gene_seq_json
+
 
 PORT = 8080
 socketserver.TCPServer.allow_reuse_address = True
@@ -16,22 +19,22 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         from urllib.parse import parse_qs, urlparse
         url_path = urlparse(self.path)
-        path = url_path.path  # we get it from here
+        path = url_path.path
         arguments = parse_qs(url_path.query)
+        json_request = arguments.get('json')
 
 
         termcolor.cprint(self.requestline, 'green')
         try:
-            # Open the form1.html file
-            # Read the index from the file
             if path == '/' or path == '':
                contents = Path('html/index.html').read_text()
+               content_type = 'text/html'
                self.send_response(200)
 
 
             elif path == '/listSpecies':
-                limit = arguments.get('limit')[0]
                 try:
+                    limit = arguments.get('limit')[0]
                     limit = int(limit)
                 except:
                     limit = None
@@ -63,9 +66,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     name = number['display_name']
                     names += f"<li> {name}"
 
-                contents = Path('html/listSpecies.html').read_text()
-                contents = contents.format(limit=limit, species=species, n_species=n_species, names=names)
-                self.send_response(200)
+                if json_request != None and json_request[0] == "1":
+                    contents = list_species_json(limit, n_species, species, options)
+                    content_type = 'application/json'
+                    error_code = 200
+                    self.send_response(error_code)
+                else:
+                    contents = Path('html/listSpecies.html').read_text()
+                    contents = contents.format(limit=limit, species=species, n_species=n_species, names=names)
+                    content_type = 'text/html'
+                    self.send_response(200)
 
             elif path == '/karyotype':
                 species = arguments.get('species')[0]
@@ -92,15 +102,23 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 karyotype = response['karyotype']
                 if species ==None:
                     contents = Path('html/error.html').read_text()
+                    content_type = 'text/html'
                     self.send_response(200)
                 else:
                     chrom = ""
                     for i in karyotype:
                         chrom += f"<br> {i}"
 
-                    contents = Path('html/karyotype.html').read_text()
-                    contents = contents.format(chrom=chrom)
-                    self.send_response(200)
+                    if json_request != None and json_request[0] == "1":
+                        contents = karyotype_json(karyotype)
+                        content_type = 'application/json'
+                        error_code = 200
+                        self.send_response(error_code)
+                    else:
+                        contents = Path('html/karyotype.html').read_text()
+                        contents = contents.format(chrom=chrom)
+                        content_type = 'text/html'
+                        self.send_response(200)
 
             elif path == '/chromosomeLength':
                 species = arguments.get('species')[0]
@@ -129,10 +147,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
                 data1 = r1.read().decode("utf-8")
                 response = json.loads(data1)
-                karyotype = response['karyotype']
+
 
                 if species ==None or chromo == None:
                     contents = Path('html/error.html').read_text()
+                    content_type = 'text/html'
                     self.send_response(200)
                 else:
 
@@ -142,9 +161,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         if name == chromo:
                             length = i['length']
 
-                    contents = Path('html/chromosomeLength.html').read_text()
-                    contents = contents.format(length=length)
-                    self.send_response(200)
+                    if json_request != None and json_request[0] == "1":
+                        contents = chromosome_length_json(length)
+                        content_type = 'application/json'
+                        error_code = 200
+                        self.send_response(error_code)
+                    else:
+                        contents = Path('html/chromosomeLength.html').read_text()
+                        contents = contents.format(length=length)
+                        content_type = 'text/html'
+                        self.send_response(200)
 
             elif path == '/geneLookup':
                 try:
@@ -172,11 +198,20 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 id = response[0]['id']
                 if gene == None:
                     contents = Path('html/error.html').read_text()
+                    content_type = 'text/html'
                     self.send_response(200)
                 else:
-                    contents = Path('html/geneLookup.html').read_text()
-                    contents = contents.format(gene=gene, id=id)
-                    self.send_response(200)
+
+                    if json_request != None and json_request[0] == "1":
+                        contents = gene_lookup_json(gene, id)
+                        content_type = 'application/json'
+                        error_code = 200
+                        self.send_response(error_code)
+                    else:
+                        contents = Path('html/geneLookup.html').read_text()
+                        contents = contents.format(gene=gene, id=id)
+                        content_type = 'text/html'
+                        self.send_response(200)
 
             elif path == '/geneSeq':
                 try:
@@ -204,6 +239,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 id = response[0]['id']
                 if gene == None:
                     contents = Path('html/error.html').read_text()
+                    content_type = 'text/html'
                     self.send_response(200)
                 else:
                     SERVER = 'rest.ensembl.org'
@@ -223,9 +259,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     data1 = r1.read().decode("utf-8")
                     response = json.loads(data1)
                     sequence = response["seq"]
-                    contents = Path('html/geneSeq.html').read_text()
-                    contents = contents.format(gene=gene, sequence=sequence)
-                    self.send_response(200)
+
+                    if json_request != None and json_request[0] == "1":
+                        contents = gene_seq_json(gene, sequence)
+                        content_type = 'application/json'
+                        error_code = 200
+                        self.send_response(error_code)
+
+                    else:
+                        contents = Path('html/geneSeq.html').read_text()
+                        contents = contents.format(gene=gene, sequence=sequence)
+                        content_type = 'text/html'
+                        self.send_response(200)
             elif path == '/geneInfo':
                 try:
                     gene = arguments.get('gene')[0]
@@ -252,6 +297,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 id = response[0]['id']
                 if gene == None:
                     contents = Path('html/error.html').read_text()
+                    content_type = 'text/html'
                     self.send_response(200)
                 else:
                     SERVER = 'rest.ensembl.org'
@@ -296,6 +342,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
                     contents = Path('html/geneInfo.html').read_text()
                     contents = contents.format(gene=gene, start=start, end=end, length=length, id=id, chrom_name=chrom_name)
+                    content_type = 'text/html'
                     self.send_response(200)
 
             elif path == '/geneCalc':
@@ -324,6 +371,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 id = response[0]['id']
                 if gene == None:
                     contents = Path('html/error.html').read_text()
+                    content_type = 'text/html'
                     self.send_response(200)
                 else:
                     SERVER = 'rest.ensembl.org'
@@ -356,6 +404,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
                     contents = Path('html/geneCalc.html').read_text()
                     contents = contents.format(base_calc=base_calc, length=length, gene=gene)
+                    content_type = 'text/html'
                     self.send_response(200)
 
             elif path == '/geneList':
@@ -395,25 +444,28 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     names += f"<li>{name}</li>"
                 if chromo == None or start == None or end == None:
                     contents = Path('html/error.html').read_text()
+                    content_type = 'text/html'
                     self.send_response(200)
                 else:
                     contents = Path('html/geneList.html').read_text()
                     contents = contents.format(chromo=chromo, start=start, end=end, names=names)
+                    content_type = 'text/html'
                     self.send_response(200)
-
             else:
                 contents = Path('html/error.html').read_text()
                 self.send_response(200)
         except TypeError:
             contents = Path('html/error.html').read_text()
+            content_type = 'text/html'
             self.send_response(200)
         except http.client.InvalidURL:
             contents = Path('html/error.html').read_text()
+            content_type = 'text/html'
             self.send_response(200)
 
 
         # Define the content-type header:
-        self.send_header('Content-Type', 'text/html')
+        self.send_header('Content-Type', content_type)
         self.send_header('Content-Length', len(str.encode(contents)))
 
         # The header is finished
