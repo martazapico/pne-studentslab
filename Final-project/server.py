@@ -358,12 +358,12 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     contents = contents.format(base_calc=base_calc, length=length, gene=gene)
                     self.send_response(200)
 
-            elif path == 'geneList':
+            elif path == '/geneList':
                 try:
                     chromo = arguments.get('chromo')[0]
                     chromo = str(chromo)
                     start = arguments.get('start')[0]
-                    gene = int(start)
+                    start = int(start)
                     end = arguments.get('end')[0]
                     end = int(end)
 
@@ -375,7 +375,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 SERVER = 'rest.ensembl.org'
                 ENDPOINT = f'/overlap/region/human/{chromo}:{start}-{end}'
                 PARAMS = '?content-type=application/json'
-                EXTRA = ';feature=gene;feature=transcript;feature=cds;feature=exon'
+                EXTRA = ';feature=gene'
                 REQUEST = ENDPOINT + PARAMS + EXTRA
                 conn = http.client.HTTPConnection(SERVER)
                 try:
@@ -389,18 +389,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
                 data1 = r1.read().decode("utf-8")
                 response = json.loads(data1)
-                ids = ""
+                names = ""
                 for i in response:
-                    id = i['id']
-                    ids += f"{id}<br>"
+                    name = i['external_name']
+                    names += f"<li>{name}</li>"
                 if chromo == None or start == None or end == None:
                     contents = Path('html/error.html').read_text()
                     self.send_response(200)
                 else:
-
-
-                    contents = Path('html/geneCalc.html').read_text()
-                    contents = contents.format(base_calc=base_calc, length=length, gene=gene)
+                    contents = Path('html/geneList.html').read_text()
+                    contents = contents.format(chromo=chromo, start=start, end=end, names=names)
                     self.send_response(200)
 
             else:
