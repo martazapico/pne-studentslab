@@ -35,7 +35,8 @@ response = send_request("/listSpecies?limit=10&json=1")
 print("CONTENT:")
 for key, value in response.items():
     if key != "species":
-        termcolor.cprint(f"{key}:", 'blue', f"{value}")
+        termcolor.cprint(f"{key}:", 'blue', end=" ")
+        print( f"{value}")
     else:
         termcolor.cprint(f"{key}:", 'blue')
         for i in value:
@@ -55,28 +56,32 @@ termcolor.cprint("\n3) CHROMOSOME LENGTH:", 'green')
 response = send_request("/chromosomeLength?species=mouse&chromo=18&json=1")
 print("CONTENT:")
 for key, value in response.items():
-    termcolor.cprint(f"{key}:", 'blue', f"{value}")
+    termcolor.cprint(f"{key}:", 'blue', end=" ")
+    print(f"{value}")
 
 
 termcolor.cprint("\n4) GENE LOOKUP:", 'green')
 response = send_request("/geneLookup?gene=ADA&json=1")
 print("CONTENT:")
 for key, value in response.items():
-    termcolor.cprint(f"{key}:", 'blue', f"{value}")
+    termcolor.cprint(f"{key}:", 'blue', end=" ")
+    print(f"{value}")
 
 
 termcolor.cprint("\n5) GENE SEQUENCE:", 'green')
 response = send_request("/geneSeq?gene=FRAT1&json=1")
 print("CONTENT:")
 for key, value in response.items():
-    termcolor.cprint(f"{key}:", 'blue', f"{value}")
+    termcolor.cprint(f"{key}:", 'blue', end=" ")
+    print(f"{value}")
 
 
 termcolor.cprint("\n6) GENE INFORMATION:", 'green')
 response = send_request("/geneInfo?gene=FXN&json=1")
 print("CONTENT:")
 for key, value in response.items():
-    termcolor.cprint(f"{key}:", 'blue', f"{value}")
+    termcolor.cprint(f"{key}:", 'blue', end=" ")
+    print(f"{value}")
 
 
 termcolor.cprint("\n7) GENE CALCULATIONS:", 'green')
@@ -84,7 +89,8 @@ response = send_request("/geneCalc?gene=U5&json=1")
 print("CONTENT:")
 for key, value in response.items():
     if key != "base calculations":
-        termcolor.cprint(f"{key}:", 'blue', f"{value}")
+        termcolor.cprint(f"{key}:", 'blue', end=" ")
+        print(f"{value}")
     else:
         termcolor.cprint(f"{key}:", 'blue', )
         print(f"{value}")
@@ -95,7 +101,8 @@ response = send_request("/geneList?chromo=20&start=44584896&end=44652252&json=1"
 print("CONTENT:")
 for key, value in response.items():
     if key != "names":
-        termcolor.cprint(f"{key}:", 'blue', f"{value}")
+        termcolor.cprint(f"{key}:", 'blue', end=" ")
+        print(f"{value}")
     else:
         termcolor.cprint(f"{key}:", 'blue', )
         print(f"{value}")
