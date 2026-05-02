@@ -26,12 +26,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         termcolor.cprint(self.requestline, 'green')
         try:
+            #Index:
             if path == '/' or path == '':
                contents = Path('html/index.html').read_text()
                content_type = 'text/html'
                self.send_response(200)
 
-
+            # 1) List Species:
             elif path == '/listSpecies':
                 try:
                     limit = arguments.get('limit')[0]
@@ -77,6 +78,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     content_type = 'text/html'
                     self.send_response(200)
 
+            # 2) Karyotype:
             elif path == '/karyotype':
                 species = arguments.get('species')[0]
                 try:
@@ -120,6 +122,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         content_type = 'text/html'
                         self.send_response(200)
 
+            # 3) Chromosome Length:
             elif path == '/chromosomeLength':
                 species = arguments.get('species')[0]
                 chromo = arguments.get('chromo')[0]
@@ -172,6 +175,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         content_type = 'text/html'
                         self.send_response(200)
 
+            # 4) Gene Lookup:
             elif path == '/geneLookup':
                 try:
                     gene = arguments.get('gene')[0]
@@ -213,6 +217,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         content_type = 'text/html'
                         self.send_response(200)
 
+            # 5) Gene Sequence:
             elif path == '/geneSeq':
                 try:
                     gene = arguments.get('gene')[0]
@@ -271,6 +276,8 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         contents = contents.format(gene=gene, sequence=sequence)
                         content_type = 'text/html'
                         self.send_response(200)
+
+            # 6) Gene Info:
             elif path == '/geneInfo':
                 try:
                     gene = arguments.get('gene')[0]
@@ -351,6 +358,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         content_type = 'text/html'
                         self.send_response(200)
 
+            # 7) Gene Calulations:
             elif path == '/geneCalc':
                 try:
                     gene = arguments.get('gene')[0]
@@ -423,6 +431,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         content_type = 'text/html'
                         self.send_response(200)
 
+            # 8) Gene List:
             elif path == '/geneList':
                 try:
                     chromo = arguments.get('chromo')[0]
@@ -476,9 +485,12 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         contents = contents.format(chromo=chromo, start=start, end=end, names=names)
                         content_type = 'text/html'
                         self.send_response(200)
+
+            # Error
             else:
                 contents = Path('html/error.html').read_text()
                 self.send_response(200)
+
         except TypeError:
             contents = Path('html/error.html').read_text()
             content_type = 'text/html'
@@ -488,15 +500,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             content_type = 'text/html'
             self.send_response(200)
 
-
-        # Define the content-type header:
         self.send_header('Content-Type', content_type)
         self.send_header('Content-Length', len(str.encode(contents)))
 
-        # The header is finished
         self.end_headers()
 
-        # Send the response message
         self.wfile.write(str.encode(contents))
 
         return
@@ -507,7 +515,6 @@ Handler = TestHandler
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
 
     print("Serving at PORT", PORT)
-
 
     try:
         httpd.serve_forever()
